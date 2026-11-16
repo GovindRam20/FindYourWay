@@ -1,0 +1,966 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b1530" />
+    <title>Miss Noha, A Winter Gift</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Hanken+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ice: #dbe7ff;
+        --ice2: #a9c1f5;
+        --gold: #ffd98a;
+        --ink: #eef3ff;
+        --mute: #9db0da;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        background: #0b1530;
+      }
+      body {
+        color: var(--ink);
+        font-family: "Hanken Grotesk", system-ui, sans-serif;
+        overflow: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+      }
+      /* night sky */
+      #sky {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(180deg, #081027 0%, #11204a 55%, #22346a 100%);
+      }
+      .moon {
+        position: absolute;
+        top: calc(env(safe-area-inset-top, 0px) + 62px);
+        right: 20px;
+        width: min(26vw, 104px);
+        transition: opacity 0.8s;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: radial-gradient(circle at 38% 36%, #fff 0, #f1f4ff 45%, #d6dfff 100%);
+        box-shadow:
+          0 0 60px 20px rgba(190, 205, 255, 0.35),
+          0 0 160px 70px rgba(150, 175, 255, 0.18);
+        animation: moon 9s ease-in-out infinite alternate;
+      }
+      @keyframes moon {
+        to {
+          transform: translateY(10px);
+        }
+      }
+      .star {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        border-radius: 50%;
+        background: #fff;
+        opacity: 0.6;
+        animation: tw 3.5s ease-in-out infinite;
+      }
+      @keyframes tw {
+        50% {
+          opacity: 0.1;
+        }
+      }
+      #sky.nomoon .moon {
+        opacity: 0;
+      }
+      #land {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 34vh;
+        min-height: 190px;
+      }
+      #snow {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 45;
+        transition: opacity 1.2s;
+      }
+      /* screens */
+      .scr {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition:
+          opacity 1.1s ease,
+          visibility 1.1s;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .scr.off {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      #intro {
+        justify-content: center;
+        text-align: center;
+        padding: 30px;
+      }
+      .kick {
+        font-size: 0.7rem;
+        letter-spacing: 0.34em;
+        text-transform: uppercase;
+        color: var(--mute);
+        margin: 0 0 14px;
+      }
+      .big {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-weight: 400;
+        line-height: 0.95;
+        margin: 0;
+        letter-spacing: -0.01em;
+        color: #f2f6ff;
+      }
+      .big i {
+        font-weight: 400;
+        color: var(--ice2);
+      }
+      #intro .big {
+        font-size: clamp(3.6rem, 17vw, 6.6rem);
+      }
+      .sub {
+        color: var(--mute);
+        margin: 20px 0 0;
+        max-width: 24em;
+        line-height: 1.6;
+      }
+      .cta {
+        margin-top: 34px;
+        font-weight: 600;
+        font-size: 1.05rem;
+        color: #0b1530;
+        background: linear-gradient(180deg, #fff, #cfdcff);
+        border: 0;
+        border-radius: 999px;
+        padding: 15px 34px;
+        cursor: pointer;
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.6),
+          0 10px 40px rgba(160, 185, 255, 0.35);
+        -webkit-tap-highlight-color: transparent;
+        transition:
+          transform 0.15s,
+          box-shadow 0.3s;
+      }
+      .cta:hover {
+        box-shadow:
+          0 0 0 1px #fff,
+          0 10px 50px rgba(190, 210, 255, 0.6);
+      }
+      .cta:active {
+        transform: scale(0.97);
+      }
+      .cta:focus-visible,
+      .card:focus-visible,
+      .ib:focus-visible {
+        outline: 3px solid var(--gold);
+        outline-offset: 3px;
+      }
+      /* home */
+      #home {
+        padding: calc(env(safe-area-inset-top, 0px) + 150px) 22px 80px;
+        justify-content: flex-start;
+      }
+      .col {
+        width: 100%;
+        max-width: 560px;
+      }
+      #home .big {
+        font-size: clamp(2.9rem, 13.5vw, 5rem);
+      }
+      .lead {
+        font-size: 1.12rem;
+        line-height: 1.7;
+        color: #d6e1ff;
+        margin: 22px 0 0;
+      }
+      .lead b {
+        font-weight: 500;
+        color: var(--gold);
+      }
+      .sec {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-style: italic;
+        font-size: clamp(1.9rem, 8vw, 2.5rem);
+        margin: 54px 0 8px;
+        color: #f2f6ff;
+      }
+      .hint {
+        color: var(--mute);
+        margin: 0 0 22px;
+        line-height: 1.6;
+      }
+      .cards {
+        display: grid;
+        gap: 14px;
+      }
+      .card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        text-align: left;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(190, 208, 255, 0.22);
+        border-radius: 22px;
+        padding: 18px 18px;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        transition:
+          transform 0.2s,
+          border-color 0.4s,
+          background 0.4s,
+          box-shadow 0.4s;
+      }
+      .card:hover {
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.1);
+      }
+      .card:active {
+        transform: scale(0.99);
+      }
+      .num {
+        flex: none;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.5rem;
+        font-style: italic;
+        color: var(--ice);
+        border: 1px solid rgba(190, 208, 255, 0.4);
+        transition: all 0.4s;
+      }
+      .ct {
+        flex: 1;
+      }
+      .ct b {
+        display: block;
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-weight: 500;
+        font-size: 1.55rem;
+        line-height: 1.1;
+        color: #f4f7ff;
+      }
+      .ct span {
+        display: block;
+        margin-top: 4px;
+        font-size: 0.92rem;
+        line-height: 1.45;
+        color: var(--mute);
+      }
+      .tag {
+        flex: none;
+        font-size: 0.7rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--mute);
+        opacity: 0.8;
+      }
+      .card.seen {
+        border-color: rgba(255, 217, 138, 0.75);
+        background: linear-gradient(135deg, rgba(255, 217, 138, 0.16), rgba(255, 255, 255, 0.07));
+        box-shadow: 0 0 34px rgba(255, 217, 138, 0.18);
+      }
+      .card.seen .num {
+        background: var(--gold);
+        color: #3a2a05;
+        border-color: var(--gold);
+      }
+      .card.seen .tag {
+        color: var(--gold);
+        opacity: 1;
+      }
+      .prog {
+        margin: 22px 0 0;
+        color: var(--mute);
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .bar {
+        flex: 1;
+        height: 4px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.14);
+        overflow: hidden;
+      }
+      .bar i {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, var(--ice2), var(--gold));
+        transition: width 1s;
+      }
+      .foot {
+        margin: 46px 0 0;
+        text-align: center;
+        color: var(--mute);
+        font-size: 0.85rem;
+      }
+      /* reveal on home */
+      .rv {
+        opacity: 0;
+        transform: translateY(18px);
+        transition:
+          opacity 0.9s ease,
+          transform 0.9s ease;
+      }
+      .home-on .rv {
+        opacity: 1;
+        transform: none;
+      }
+      .home-on .rv:nth-child(2) {
+        transition-delay: 0.15s;
+      }
+      .home-on .rv:nth-child(3) {
+        transition-delay: 0.3s;
+      }
+      .home-on .rv:nth-child(4) {
+        transition-delay: 0.45s;
+      }
+      .home-on .rv:nth-child(5) {
+        transition-delay: 0.6s;
+      }
+      /* pages */
+      #frame {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        z-index: 10;
+        opacity: 0;
+        visibility: hidden;
+        background: #fbf5e9;
+        transition: opacity 1.1s;
+      }
+      #frame.on {
+        opacity: 1;
+        visibility: visible;
+      }
+      #veil {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 1s ease;
+        background: radial-gradient(90% 70% at 50% 35%, #f4f8ff, #bcd0f7 68%, #8aa6e6);
+      }
+      #veil.on {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      /* corner signature, visible on every page */
+      #wm {
+        position: fixed;
+        z-index: 60;
+        right: 14px;
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+        font-family: "Hanken Grotesk", system-ui, sans-serif;
+        font-weight: 600;
+        font-size: 0.8rem;
+        letter-spacing: 0.14em;
+        color: #fff;
+        mix-blend-mode: difference;
+        opacity: 0.55;
+        pointer-events: none;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+      /* top buttons */
+      #top {
+        position: fixed;
+        z-index: 50;
+        top: calc(env(safe-area-inset-top, 0px) + 12px);
+        left: 12px;
+        right: 12px;
+        display: flex;
+        justify-content: space-between;
+        pointer-events: none;
+      }
+      .ib {
+        pointer-events: auto;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        background: rgba(14, 24, 56, 0.62);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        transition:
+          opacity 0.6s,
+          transform 0.2s;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .ib:active {
+        transform: scale(0.94);
+      }
+      .ib svg {
+        width: 22px;
+        height: 22px;
+        fill: none;
+        stroke: #fff;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      #top.hide .ib {
+        opacity: 0;
+        pointer-events: none;
+      }
+      #bhome {
+        opacity: 0;
+        pointer-events: none;
+      }
+      #top.inpage #bhome {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .moon,
+        .star {
+          animation: none;
+        }
+        .rv {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="sky" aria-hidden="true">
+      <div class="moon"></div>
+      <svg id="land" viewBox="0 0 800 260" preserveAspectRatio="none">
+        <path
+          d="M0 150 L90 80 L150 120 L250 40 L340 130 L430 70 L520 125 L610 55 L700 120 L800 75 V260 H0z"
+          fill="#1b2c5c"
+          opacity=".75"
+        />
+        <path
+          d="M0 190 L70 140 L160 175 L270 105 L370 170 L470 125 L570 175 L680 115 L800 170 V260 H0z"
+          fill="#142248"
+        />
+        <g fill="#070d20" id="pines"></g>
+        <rect y="236" width="800" height="24" fill="#070d20" />
+      </svg>
+    </div>
+    <canvas id="snow"></canvas>
+
+    <section class="scr" id="intro">
+      <p class="kick">This is For You</p>
+      <h1 class="big">Oh, you're <i>here!</i></h1>
+      <p class="sub">A small Winter world is waiting for you inside.</p>
+      <button class="cta" id="enter" type="button">Click here to come in</button>
+    </section>
+
+    <section class="scr off" id="home">
+      <div class="col">
+        <p class="kick rv">17 November &middot; Born in winter</p>
+        <h1 class="big rv">Happy Birthday,<br /><i>Miss Noha</i></h1>
+        <p class="lead rv">
+          You were born in winter, which means we can call you the
+          <b>Snow Queen</b> &#10052;<br />So I built you a small winter kingdom, with a few
+          surprises inside.
+        </p>
+        <h2 class="sec rv">Four little doors</h2>
+        <p class="hint rv">
+          Open them in any order, as many times as you like. A door lights up once you have opened
+          it.
+        </p>
+        <div class="cards rv" id="cards"></div>
+        <div class="prog rv">
+          <span id="ptxt">0 of 4 opened</span>
+          <div class="bar"><i id="pbar"></i></div>
+        </div>
+        <p class="foot rv">Friends Only Okiee</p>
+      </div>
+    </section>
+
+    <div id="veil"></div>
+
+    <div id="wm" aria-hidden="true">Ꭾɪᴋᴀᴄʜᴜ</div>
+    <div id="top" class="hide">
+      <button class="ib" id="bhome" type="button" aria-label="Back to home">
+        <svg viewBox="0 0 24 24">
+          <path d="M4 11l8-7 8 7" />
+          <path d="M6 10v10h12V10" />
+        </svg>
+      </button>
+      <button class="ib" id="bmute" type="button" aria-label="Mute music">
+        <svg viewBox="0 0 24 24" id="ison">
+          <path d="M4 9v6h4l5 4V5L8 9z" />
+          <path d="M16 9c1.5 1.7 1.5 4.3 0 6" />
+          <path d="M19 6.5c3 3.3 3 7.7 0 11" /></svg
+        ><svg viewBox="0 0 24 24" id="isoff" style="display: none">
+          <path d="M4 9v6h4l5 4V5L8 9z" />
+          <path d="M17 9l5 6M22 9l-5 6" />
+        </svg>
+      </button>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+      (function () {
+        var SITE = window.SITE || {};
+        var PAGES = [
+          {
+            id: "wishes",
+            n: 1,
+            t: "Wishes & Blessings",
+            d: "Warm wishes, blessings, and the reasons you matter.",
+            src: "pages/wishes.html",
+          },
+          {
+            id: "quiz",
+            n: 2,
+            t: "Three Questions",
+            d: "A tiny quiz where my own voice reacts to your answers.",
+            src: "pages/quiz.html",
+          },
+          {
+            id: "song",
+            n: 3,
+            t: "A Song for You",
+            d: "A little song, sung just for you.",
+            src: "pages/song.html",
+          },
+          {
+            id: "playlist",
+            n: 4,
+            t: "Your Playlist",
+            d: "My favourite songs, collected for you.",
+            src: "pages/playlist.html",
+          },
+        ];
+        var $ = function (i) {
+          return document.getElementById(i);
+        };
+        /* ---------- scenery ---------- */
+        var pn = "";
+        for (var i = 0; i < 40; i++) {
+          var x = i * 21 + Math.random() * 10,
+            h = 26 + Math.random() * 34;
+          pn +=
+            '<path d="M' + (x - 9) + " 238 L" + x + " " + (238 - h) + " L" + (x + 9) + ' 238z"/>';
+        }
+        $("pines").innerHTML = pn;
+        for (i = 0; i < 26; i++) {
+          var s = document.createElement("i");
+          s.className = "star";
+          s.style.cssText =
+            "left:" +
+            Math.random() * 100 +
+            "%;top:" +
+            Math.random() * 55 +
+            "%;animation-delay:" +
+            Math.random() * 3.5 +
+            "s";
+          $("sky").appendChild(s);
+        }
+        /* ---------- snow (own tiny engine, no libraries) ---------- */
+        var cv = $("snow"),
+          g = cv.getContext("2d"),
+          W = 0,
+          H = 0,
+          flakes = [],
+          gust = 0,
+          sprites = [];
+        var calm = matchMedia("(prefers-reduced-motion:reduce)").matches;
+        function mk(draw) {
+          var c = document.createElement("canvas");
+          c.width = c.height = 64;
+          var x = c.getContext("2d");
+          x.translate(32, 32);
+          draw(x);
+          return c;
+        }
+        sprites.push(
+          mk(function (x) {
+            var r = x.createRadialGradient(0, 0, 0, 0, 0, 30);
+            r.addColorStop(0, "rgba(255,255,255,1)");
+            r.addColorStop(0.4, "rgba(255,255,255,.75)");
+            r.addColorStop(1, "rgba(255,255,255,0)");
+            x.fillStyle = r;
+            x.beginPath();
+            x.arc(0, 0, 30, 0, 7);
+            x.fill();
+          }),
+        );
+        function crystal(arms) {
+          return mk(function (x) {
+            x.strokeStyle = "rgba(235,242,255,.95)";
+            x.lineWidth = 2.4;
+            x.lineCap = "round";
+            for (var k = 0; k < 6; k++) {
+              x.save();
+              x.rotate((k * Math.PI) / 3);
+              x.beginPath();
+              x.moveTo(0, 0);
+              x.lineTo(0, -26);
+              x.stroke();
+              if (arms) {
+                x.beginPath();
+                x.moveTo(0, -14);
+                x.lineTo(-7, -21);
+                x.moveTo(0, -14);
+                x.lineTo(7, -21);
+                x.stroke();
+              }
+              x.restore();
+            }
+          });
+        }
+        sprites.push(crystal(0));
+        sprites.push(crystal(1));
+        function size() {
+          W = cv.width = innerWidth;
+          H = cv.height = innerHeight;
+          var n = Math.round(Math.min(150, (W * H) / 9000));
+          if (calm) n = Math.round(n / 3);
+          while (flakes.length < n) flakes.push(fl(true));
+          flakes.length = n;
+        }
+        function fl(r) {
+          var z = Math.random(),
+            t = z > 0.86 ? (Math.random() > 0.5 ? 1 : 2) : 0;
+          return {
+            x: Math.random() * W,
+            y: r ? Math.random() * H : -20,
+            z: z,
+            t: t,
+            s: t ? 9 + z * 12 : 3 + z * 9,
+            v: 0.35 + z * 1.1,
+            p: Math.random() * 6,
+            a: Math.random() * 6,
+            w: (Math.random() - 0.5) * 0.02,
+            o: 0.35 + z * 0.6,
+          };
+        }
+        function tick() {
+          g.clearRect(0, 0, W, H);
+          var k = 1 + gust * 5;
+          gust *= 0.985;
+          if (gust < 0.01) gust = 0;
+          for (var i = 0; i < flakes.length; i++) {
+            var f = flakes[i];
+            f.y += f.v * k;
+            f.p += 0.008 + f.z * 0.01;
+            f.x += Math.sin(f.p) * (0.35 + f.z * 0.5) + gust * (2 + f.z * 5);
+            f.a += f.w;
+            if (f.y > H + 20 || f.x > W + 30) {
+              var n = fl(false);
+              n.x = Math.random() * W;
+              if (gust > 0.2) n.x = -20 - Math.random() * 60;
+              flakes[i] = n;
+              continue;
+            }
+            g.globalAlpha = f.o;
+            g.save();
+            g.translate(f.x, f.y);
+            g.rotate(f.a);
+            g.drawImage(sprites[f.t], -f.s, -f.s, f.s * 2, f.s * 2);
+            g.restore();
+          }
+          requestAnimationFrame(tick);
+        }
+        size();
+        addEventListener("resize", size);
+        tick();
+        /* ---------- background music with fades ---------- */
+        var tracks = SITE.bgMusic && SITE.bgMusic.length ? SITE.bgMusic : [];
+        var bg = new Audio();
+        bg.preload = "auto";
+        var ti = 0;
+        if (tracks.length) {
+          bg.src = tracks[0];
+          bg.loop = tracks.length === 1;
+        }
+        bg.addEventListener("ended", function () {
+          if (tracks.length > 1) {
+            ti = (ti + 1) % tracks.length;
+            bg.src = tracks[ti];
+            bg.play().catch(function () {});
+          }
+        });
+        var gain = null,
+          actx = null,
+          level = 0,
+          muted = false,
+          want = "home",
+          fadeId = 0;
+        try {
+          muted = localStorage.getItem("noha_mute") === "1";
+        } catch (e) {}
+        function setLevel(v) {
+          level = v;
+          if (gain) gain.gain.value = v;
+          else bg.volume = Math.max(0, Math.min(1, v));
+        }
+        function initGain() {
+          if (location.protocol === "file:") return;
+          try {
+            var A = window.AudioContext || window.webkitAudioContext;
+            actx = new A();
+            var s = actx.createMediaElementSource(bg);
+            gain = actx.createGain();
+            gain.gain.value = 0;
+            s.connect(gain);
+            gain.connect(actx.destination);
+          } catch (e) {
+            gain = null;
+          }
+        }
+        function fadeTo(v, sec, after) {
+          var id = ++fadeId,
+            a = level,
+            t0 = performance.now(),
+            d = Math.max(0.05, sec) * 1000;
+          (function st(now) {
+            if (id !== fadeId) return;
+            var p = Math.min(1, (now - t0) / d);
+            setLevel(a + (v - a) * p);
+            if (p < 1) requestAnimationFrame(st);
+            else if (after) after();
+          })(t0);
+        }
+        var started = false;
+        function target() {
+          var v = SITE.volume && SITE.volume[want];
+          if (v == null) v = 0.3;
+          return muted ? 0 : v;
+        }
+        function applyAudio() {
+          if (!started || !tracks.length) return;
+          var t = target(),
+            full = ((SITE.volume && SITE.volume[want]) || 0) === 0;
+          if (full) {
+            fadeTo(0, SITE.fadeOut || 1.6, function () {
+              if (((SITE.volume && SITE.volume[want]) || 0) === 0) bg.pause();
+            });
+          } else {
+            if (bg.paused) {
+              bg.play().catch(function () {});
+            }
+            fadeTo(t, (t > level ? SITE.fadeIn : SITE.fadeOut) || 2);
+          }
+        }
+        function startAudio() {
+          if (started || !tracks.length) {
+            started = true;
+            return;
+          }
+          started = true;
+          initGain();
+          if (actx && actx.state === "suspended") actx.resume();
+          setLevel(0);
+          bg.play()
+            .then(applyAudio)
+            .catch(function () {});
+        }
+        function paintMute() {
+          $("ison").style.display = muted ? "none" : "";
+          $("isoff").style.display = muted ? "" : "none";
+          $("bmute").setAttribute("aria-label", muted ? "Unmute music" : "Mute music");
+        }
+        $("bmute").addEventListener("click", function () {
+          muted = !muted;
+          try {
+            localStorage.setItem("noha_mute", muted ? "1" : "0");
+          } catch (e) {}
+          paintMute();
+          if (started) {
+            var full = ((SITE.volume && SITE.volume[want]) || 0) === 0;
+            if (!full) {
+              if (bg.paused) bg.play().catch(function () {});
+              fadeTo(target(), 0.6);
+            }
+          }
+        });
+        paintMute();
+        /* ---------- opened pages ---------- */
+        var seen = {};
+        try {
+          seen = JSON.parse(localStorage.getItem("noha_opened") || "{}");
+        } catch (e) {}
+        function paintCards() {
+          var n = 0;
+          PAGES.forEach(function (p) {
+            var el = $("c_" + p.id);
+            var on = !!seen[p.id];
+            if (on) n++;
+            el.classList.toggle("seen", on);
+            el.querySelector(".tag").textContent = on ? "Opened \u2713" : "Open";
+          });
+          $("ptxt").textContent = n + " of 4 opened";
+          $("pbar").style.width = n * 25 + "%";
+        }
+        PAGES.forEach(function (p) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "card";
+          b.id = "c_" + p.id;
+          b.innerHTML =
+            '<span class="num">' +
+            p.n +
+            '</span><span class="ct"><b>' +
+            p.t +
+            "</b><span>" +
+            p.d +
+            '</span></span><span class="tag">Open</span>';
+          b.addEventListener("click", function () {
+            go(p.id);
+          });
+          $("cards").appendChild(b);
+        });
+        paintCards();
+        /* ---------- moving between home and the pages (like the seasons changing) ---------- */
+        var cur = "intro",
+          busy = false,
+          fr = null,
+          veil = $("veil"),
+          top = $("top");
+        function mkFrame(src) {
+          var f = document.createElement("iframe");
+          f.id = "frame";
+          f.title = "Page";
+          f.setAttribute("allow", "autoplay");
+          document.body.insertBefore(f, veil);
+          f.src = src;
+          return f;
+        }
+        function wait(ms, f) {
+          setTimeout(f, ms);
+        }
+        function go(t, quiet) {
+          if (busy || t === cur) return;
+          busy = true;
+          want = t === "home" ? "home" : t;
+          applyAudio();
+          gust = 1.1;
+          veil.classList.add("on");
+          wait(1050, function () {
+            if (t === "home") {
+              if (fr) {
+                var old = fr;
+                old.classList.remove("on");
+                wait(1200, function () {
+                  old.remove();
+                });
+                fr = null;
+              }
+              $("home").classList.remove("off");
+              $("snow").style.opacity = 1;
+              top.classList.remove("inpage");
+              paintCards();
+            } else {
+              var p = PAGES.filter(function (x) {
+                return x.id === t;
+              })[0];
+              seen[t] = 1;
+              try {
+                localStorage.setItem("noha_opened", JSON.stringify(seen));
+              } catch (e) {}
+              $("home").classList.add("off");
+              $("snow").style.opacity = 0;
+              if (fr) fr.remove();
+              fr = mkFrame(p.src);
+              top.classList.add("inpage");
+              if (!quiet) history.pushState({ p: t }, "");
+            }
+            cur = t;
+            var shown = false;
+            function reveal() {
+              if (shown) return;
+              shown = true;
+              if (t !== "home") fr.classList.add("on");
+              veil.classList.remove("on");
+              wait(1000, function () {
+                busy = false;
+              });
+            }
+            if (t === "home") {
+              wait(250, reveal);
+            } else {
+              fr.onload = function () {
+                wait(250, reveal);
+              };
+              wait(2500, reveal);
+            }
+          });
+        }
+        $("bhome").addEventListener("click", function () {
+          go("home");
+        });
+        addEventListener("message", function (e) {
+          if (e.data && e.data.noha === "home") go("home");
+        });
+        addEventListener("popstate", function () {
+          if (cur !== "home" && cur !== "intro") go("home");
+        });
+        $("home").addEventListener("scroll", function () {
+          $("sky").classList.toggle("nomoon", $("home").scrollTop > 70);
+        });
+        /* ---------- first button ---------- */
+        $("enter").addEventListener("click", function () {
+          startAudio();
+          want = "home";
+          applyAudio();
+          top.classList.remove("hide");
+          $("intro").classList.add("off");
+          $("home").classList.remove("off");
+          cur = "home";
+          wait(250, function () {
+            $("home").classList.add("home-on");
+          });
+        });
+        window.__noha = {
+          get level() {
+            return level;
+          },
+          get cur() {
+            return cur;
+          },
+          bg: bg,
+        };
+      })();
+    </script>
+  </body>
+</html>
