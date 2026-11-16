@@ -1,0 +1,33 @@
+name: Compress MP3s
+on: workflow_dispatch        # sirf tab chalega jab tum khud button dabaoge
+
+permissions:
+  contents: write
+
+jobs:
+  compress:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Compress mp3 files
+        run: |
+          cd playlist
+          for f in *.mp3; do
+            br=$(ffprobe -v error -show_entries format=bit_rate -of default=nw=1:nk=1 "$f")
+            if [ "$br" -gt 140000 ]; then
+              echo "Compressing $f ($br bps)"
+              ffmpeg -y -i "$f" -vn -map_metadata -1 -codec:a libmp3lame -b:a 128k -ar 44100 "tmp_$f" && mv "tmp_$f" "$f"
+            fi
+          done
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "Compress mp3 files"
+          git push
